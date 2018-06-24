@@ -17,7 +17,7 @@ d3.json(earthquake_url, function(data){
 
 function createFeatures(earthquakeData) {       
   // Create a GeoJSON layer containing the features array on the earthquakeData object
-  // Run the onEachFeature function once for each piece of data in the array
+  // Run the onEachFeature for data in the array
   var earthquakes = L.geoJson(earthquakeData, {
 
     onEachFeature: function (feature, layer){
@@ -67,10 +67,10 @@ function createMap(earthquakes){
   };
 
   var myMap = L.map("mapid", {
-  //center: [37.09, -95.71],
-  center:[48.1667, -100.1667],
-  zoom: 3,
-  layers : [outdoorMap, earthquakes, faultLines]
+    //center: [37.09, -95.71],
+    center:[48.1667, -100.1667],
+    zoom: 3,
+    layers : [outdoorMap, earthquakes, faultLines]
   });
 
   //Create layer control
@@ -78,24 +78,30 @@ function createMap(earthquakes){
     collapsed: false
   }).addTo(myMap);
 
-
+  // Create a legend to display information about the map
   var legend = L.control({position: 'bottomright'});
-    legend.onAdd = function (myMap) {
 
-    var div = L.DomUtil.create('div', 'info legend');
+  //insert a div with the class of "legend"
+  legend.onAdd = function(myMap) {
+
+    var div = L.DomUtil.create('div', 'info legend'),
+    grades = [0, 1, 2, 3, 4, 5],
     labels = [],
-    categories = [0, 1, 2, 3, 4, 5];
+    from, to;
 
-    for (var i = 0; i < categories.length; i++) {
-            labels.push(
-                '<i style="background:' + getColor(categories[i]+1) + '"></i> ' +      
-           (categories[i] + '-' + (categories[i]+1)) );
-        }
-        div.innerHTML = labels.join('<br>');
-        return div;
+    for (var i = 0; i < grades.length; i++) {
+      from = grades[i];
+      to = grades[i+1];
+      labels.push('<i style="background:' + getColor(from + 1) + '"></i>' + from + (to ? '&ndash;' + to : '+'));
     };
-    legend.addTo(myMap);
+    div.innerHTML = labels.join('<br>');
+    return div;
   };
+
+  // Add the info legend to the map
+  legend.addTo(myMap); 
+};
+
 
 //Change the magnitude of the earthquake by a factor of 3 for the radius of the circle. 
 function getRadius(value){
@@ -108,8 +114,8 @@ function getColor(color){
   color > 3  ? '#F90' :
   color > 2  ? '#FC0' :
   color > 1  ? '#FF0' :
-              '#6F0';
-}
+                '#6F0';
+};
 
 
 
