@@ -21,7 +21,3 @@ The USGS is responsible for providing scientific data about natural hazards, the
 * Legend provides context for the map data.
 
 ![Outdoors Map](images/outdoor.png)
-![Light Map](images/light.png)
-![Satellite Map](images/satellite.png)
- 
-
